@@ -74,3 +74,11 @@ export {
   FOLD_GLYPH_SELECTOR,
   ARTIFACT_ROW_NAV_SPACING,
 } from './components/parts/rows';
+
+/** Message list root: the scroll container, mount window and pending tail around the thread. */
+export { default as MessagesView } from './components/messages/MessagesView';
+export type {
+  MessagesViewProps,
+  MessagesThreadProps,
+  MessagesScrollButtonProps,
+} from './components/messages/MessagesView';
