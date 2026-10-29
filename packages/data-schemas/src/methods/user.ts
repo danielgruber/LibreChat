@@ -17,8 +17,8 @@ import type {
 import type { TwoFactorEnrollmentGuard, TwoFactorEnrollmentUpdate } from '~/types';
 import type { CacheStore } from '~/types';
 import { closeResponseScopes, eraseResponseRecords } from './responseScope';
+import { eraseChannelPersistenceForUser } from '~/methods/channelErasure';
 import { scoreSearchMatch, buildUserSearchFilter } from '~/utils/search';
-import { eraseChannelOwner } from './channelErasure';
 import { evictAuthUserDocs } from '~/utils/eviction';
 import { signPayload } from '~/crypto';
 import logger from '~/config/winston';
@@ -650,7 +650,7 @@ export function createUserMethods(
         await eraseResponseRecords(mongoose, { userId, tenantId: owner.tenantId });
         // Admission writes the same owner anchor in its insertion transaction.
         // Closing it therefore precedes both this sweep and every delayed retry.
-        await eraseChannelOwner(mongoose, { userId, tenantId: owner.tenantId });
+        await eraseChannelPersistenceForUser(mongoose, { userId, tenantId: owner.tenantId });
       }
       await mongoose.models.ToolApprovalGrant?.deleteMany({ user: userId });
       const result = await User.deleteOne({ _id: userId });
