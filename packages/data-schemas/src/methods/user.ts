@@ -1,9 +1,5 @@
 import mongoose, { FilterQuery } from 'mongoose';
-import {
-  AUTH_USER_DOC_CACHE_TTL_MS,
-  CacheKeys,
-  channelStorageConfigSchema,
-} from 'librechat-data-provider';
+import { AUTH_USER_DOC_CACHE_TTL_MS, CacheKeys } from 'librechat-data-provider';
 import type {
   ChannelStorageConfig,
   BalanceRefillMode,
@@ -21,8 +17,11 @@ import type {
 } from '~/types';
 import type { TwoFactorEnrollmentGuard, TwoFactorEnrollmentUpdate } from '~/types';
 import type { CacheStore } from '~/types';
+import {
+  eraseChannelPersistenceForUser,
+  resolveChannelErasureConfig,
+} from '~/methods/channelErasure';
 import { closeResponseScopes, eraseResponseRecords } from './responseScope';
-import { eraseChannelPersistenceForUser } from '~/methods/channelErasure';
 import { scoreSearchMatch, buildUserSearchFilter } from '~/utils/search';
 import { evictAuthUserDocs } from '~/utils/eviction';
 import { signPayload } from '~/crypto';
@@ -652,7 +651,7 @@ export function createUserMethods(
       const User = mongoose.models.User;
       const owner = await User.findById(userId).select('tenantId').lean<Pick<IUser, 'tenantId'>>();
       if (owner) {
-        const channelConfig = channelStorageConfigSchema.parse(
+        const channelConfig = resolveChannelErasureConfig(
           (await deps.getChannelStorageConfig?.()) ?? {},
         );
         await closeResponseScopes(mongoose, { userId, tenantId: owner.tenantId });
