@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import type { StreamHost } from '@librechat/chat/react';
+import { useParentSubagentIndex } from '~/data-provider/Subagents/parents';
 import { useChatTransport } from '~/Providers/ChatTransportContext';
 import { useResumableServices } from '~/hooks/SSE/resumable';
 import { useAuthContext } from '~/hooks/AuthContext';
@@ -21,6 +22,7 @@ export const appStreamHost: StreamHost = {
   useResumableServices,
   useLegacyStream: useSSE,
   useTransport,
+  useParentSubagentIndex,
 };
 
 export { StreamHostProvider, useStreamHost } from '@librechat/chat/react';

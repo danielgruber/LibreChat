@@ -19,6 +19,7 @@ const host: StreamHost = {
   },
   useLegacyStream,
   useTransport: () => null,
+  useParentSubagentIndex: () => ({ isError: false, refetch: async () => ({}) }),
 };
 
 const wrapper = ({ children }: { children: React.ReactNode }) => (

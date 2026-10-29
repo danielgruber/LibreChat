@@ -1,10 +1,13 @@
 import { Suspense, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { activeSubagentPanel, useIsSubmitting } from '@librechat/chat/react';
 import { EModelEndpoint, FileSources, LocalStorageKeys } from 'librechat-data-provider';
+import {
+  activeSubagentPanel,
+  useIsSubmitting,
+  ParentSubagentsProvider,
+} from '@librechat/chat/react';
 import type { ExtendedFile } from '~/common';
-import { ParentSubagentsProvider } from '~/components/Chat/Subagents/ParentSubagentsProvider';
 import useArtifactsRegistryLifetime from '~/hooks/Artifacts/useArtifactsRegistryLifetime';
 import { useDeleteFilesMutation, useGetStartupConfig } from '~/data-provider';
 import { MessageSurfaceContext } from '~/components/Chat/Messages/ui/surface';

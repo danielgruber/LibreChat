@@ -77,6 +77,7 @@ const host: StreamHost = {
   },
   useLegacyStream: () => undefined,
   useTransport: () => transport,
+  useParentSubagentIndex: () => ({ isError: false, refetch: async () => ({}) }),
 };
 const transport = createSSETransport({ token: 'token-1' });
 

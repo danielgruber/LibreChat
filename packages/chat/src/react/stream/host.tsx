@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import type { ChatTransport, TSubmission } from 'librechat-data-provider';
+import type { ChatTransport, ParentSubagentIndex, TSubmission } from 'librechat-data-provider';
 import type { Dispatch, ReactNode, SetStateAction } from 'react';
 import type { ResumableHost, ResumableRun } from '../../core';
 import type { ChatContract } from '../chat/contract';
@@ -20,6 +20,13 @@ export type ResumableStreamParams = {
   isAddedRequest: boolean;
   /** Reports the stream the pane is attached to, or `null` once it detaches. */
   setStreamId: Dispatch<SetStateAction<string | null>>;
+};
+
+/** The parent conversation's durable subagent index, as the host's query cache holds it. */
+export type ParentSubagentIndexQuery = {
+  data?: ParentSubagentIndex;
+  isError: boolean;
+  refetch: () => Promise<{ data?: ParentSubagentIndex }>;
 };
 
 /** Everything a resumable stream runs on except how it re-attaches, which the binding owns. */
@@ -49,6 +56,15 @@ export interface StreamHost {
    * turn such as a subagent's activity. Changes when the token does.
    */
   useTransport(): ChatTransport | null;
+  /**
+   * The parent conversation's subagent index from the host's query cache, so the host's own
+   * stream handlers and invalidations keep reaching the same entry. Polls while `isSubmitting`.
+   */
+  useParentSubagentIndex(
+    conversationId: string,
+    enabled: boolean,
+    isSubmitting: boolean,
+  ): ParentSubagentIndexQuery;
 }
 
 const StreamHostContext = createContext<StreamHost | null>(null);
